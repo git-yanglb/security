@@ -1,0 +1,135 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 | SpringForAll - Spring Security</title>
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css"
+	rel="stylesheet">
+<script type="text/javascript" src="/js/jquery-2.2.0.min.js"></script>
+</head>
+
+<body style="background-color: #f1f1f1; padding-bottom: 0">
+
+	<div th:insert="~{header :: nav}"></div>
+
+	<div class="container" style="margin-top: 60px">
+
+		<div class="row" style="margin-top: 100px">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							<span class="glyphicon glyphicon-console"></span> Login
+						</h3>
+					</div>
+					<div class="panel-body">
+						<th:block th:if="${loginType == 'form'}">
+							<form th:action="@{/login}" method="post">
+						</th:block>
+						<th:block th:if="${loginType == 'mobile'}">
+							<form th:action="@{/sms/login}" method="post">
+						</th:block>
+							<th:block th:if="${loginType == 'form'}">
+								<div class="form-group" style="margin-top: 30px;text-aligin:center;">
+									<div class="input-group col-md-6 col-md-offset-3">
+										<div class="input-group-addon">
+											<span class="glyphicon glyphicon-user"></span>
+										</div>
+										<input type="text" class="form-control" name="username"
+											id="username" placeholder="账号">
+									</div>
+								</div>
+								<div class="form-group ">
+									<div class="input-group col-md-6 col-md-offset-3">
+										<div class="input-group-addon">
+											<span class="glyphicon glyphicon-lock"></span>
+										</div>
+										<input type="password" class="form-control" name="password"
+											id="password" placeholder="密码">
+									</div>
+								</div>
+							</th:block>
+							<th:block th:if="${loginType == 'mobile'}">
+								<div class="form-group" style="margin-top: 30px">
+									<div class="input-group col-md-6 col-md-offset-3">
+										<div class="input-group-addon">
+											<span class="glyphicon glyphicon-user"></span>
+										</div>
+										<input type="text" class="form-control" name="mobile"
+											id="mobile" placeholder="手机号" value="13992948736">
+									</div>
+								</div>
+								<div class="form-group ">
+									<div class="input-group col-md-6 col-md-offset-3">
+										<div class="input-group-addon">
+											<span class="glyphicon glyphicon-lock"></span>
+										</div>
+										<input type="password" class="form-control" name="smscode"
+											id="smscode" placeholder="短信验证码">
+									</div>
+								</div>
+								<div class="form-group ">
+									<div class="input-group col-md-6 col-md-offset-3">
+										<div class="input-group-addon">
+											<div id="sendSmscode" style="cursor: pointer;">
+												<span class="glyphicon glyphicon-phone"></span>
+												发送短信验证码
+											</div>
+										</div>
+									</div>
+								</div>
+							</th:block>
+							<br>
+							<div th:if="${param.error}">
+								<p style="text-align: center" class="text-danger">登录失败，账号或密码错误!</p>
+							</div>
+							<div th:if="${result}">
+								<p style="text-align: center" class="text-success"
+									th:text="${result}"></p>
+							</div>
+							<div class="form-group">
+								<div class="input-group col-md-12 col-xs-12 ">
+									<button type="submit" class="btn btn-primary btn-block">登录</button>
+									<th:block th:if="${loginType == 'form'}">
+										<a href="/login.html?loginType=mobile" class="btn btn-primary btn-block">手机登录</a>
+									</th:block>
+									<th:block th:if="${loginType == 'mobile'}">
+										<a href="/login.html?loginType=form" class="btn btn-primary btn-block">表单登录</a>
+									</th:block>
+								</div>
+								<div class="input-group col-md-12 col-xs-12"
+									style="margin: 10px; text-align: center;">
+									其他账号登录： <a
+										href="/auth/qq"><img
+										src="/image/Connect_logo_1.png"></a> <a href="/auth/weixin"
+										style="margin-left: 10px;"><img src="/image/resizeApi.png"></a>
+								</div>
+							</div>
+							<div class="input-group col-md-12 col-xs-12"
+									style="margin: 10px; text-align: center;">
+								<div class="input-group col-md-6 col-md-offset-3"
+									style="text-align: center">创建账号 | 忘记密码?</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+<script>
+
+	$(function(){
+		$("#sendSmscode").click(() => {
+			var mobile = $(":input[name='mobile']").val();
+			$.ajax({
+				url:"/code/sms",
+				data: {"mobile" : mobile}
+			});
+		});
+	});
+	
+</script>
+</html>
