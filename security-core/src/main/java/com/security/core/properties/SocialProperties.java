@@ -8,8 +8,10 @@ import lombok.Setter;
 public class SocialProperties {
 
 	private QQProperties qq = new QQProperties();
-	
+
 	// qq登录回调路径
 	private String filterProcessesUrl = "/auth";
+
+	private WeixinProperties weixin = new WeixinProperties();
 
 }
