@@ -1,0 +1,14 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /client1
+security:
+  oauth2:
+    client:
+      client-id: security1
+      client-secret: security1
+      user-authorization-uri: http://localhost:9999/server/oauth/authorize
+      access-token-uri: http://localhost:9999/server/oauth/token
+    resource:
+      jwt:
+        key-uri: http://localhost:9999/server/oauth/token_key
