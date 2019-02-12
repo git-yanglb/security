@@ -11,10 +11,8 @@
 	<artifactId>security-demo</artifactId>
 
 	<dependencies>
-		<!-- <dependency>
-			<groupId>com.security</groupId>
-			<artifactId>security-browser</artifactId>
-		</dependency>  -->
+		<!-- <dependency> <groupId>com.security</groupId> <artifactId>security-browser</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>com.security</groupId>
 			<artifactId>security-app</artifactId>
@@ -58,6 +56,10 @@
 		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
 		</dependency>
 	</dependencies>
 

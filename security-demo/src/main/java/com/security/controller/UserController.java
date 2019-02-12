@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,14 +24,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.security.app.social.AppSignUpUtils;
+import com.security.core.properties.SecurityProperties;
 import com.security.dto.User;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Api(value = "用户服务", tags = { "用户服务" })
+@Slf4j
 public class UserController {
 
 	@Autowired
@@ -45,11 +51,14 @@ public class UserController {
 		users.add(new User(3, "cc", "cc", null));
 	}
 
-//	@Autowired
-//	private ProviderSignInUtils providerSignInUtils;
+	// @Autowired
+	// private ProviderSignInUtils providerSignInUtils;
 
 	@Autowired
 	private AppSignUpUtils appSignUpUtils;
+
+	@Autowired
+	private SecurityProperties securityProperties;
 
 	@GetMapping("/user/me")
 	public Object userInfo() {
@@ -57,7 +66,18 @@ public class UserController {
 	}
 
 	@GetMapping("/user/me/1")
-	public Object userInfo1(Authentication authentication) {
+	public Object userInfo1(Authentication authentication, HttpServletRequest request) throws Exception {
+
+		String authorization = request.getHeader("Authorization");
+		String token = StringUtils.substringAfter(authorization, "bearer ");
+
+		Claims claims = Jwts.parser().setSigningKey(securityProperties.getOauth2()
+				.getJwtSigningKey().getBytes("UTF-8")).parseClaimsJws(token).getBody();
+
+		String company = String.valueOf(claims.get("company"));
+
+		log.info("---> {}", company);
+		
 		return authentication;
 	}
 
@@ -119,7 +139,8 @@ public class UserController {
 	@PostMapping("/user/regist")
 	public void regist(User user, HttpServletRequest request) {
 		String userId = user.getNickName();
-		//providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+		// providerSignInUtils.doPostSignUp(userId, new
+		// ServletWebRequest(request));
 
 		appSignUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
 	}
