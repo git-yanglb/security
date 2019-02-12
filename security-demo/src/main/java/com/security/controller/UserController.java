@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +22,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.security.app.social.AppSignUpUtils;
 import com.security.dto.User;
 
 import io.swagger.annotations.Api;
@@ -45,8 +45,11 @@ public class UserController {
 		users.add(new User(3, "cc", "cc", null));
 	}
 
+//	@Autowired
+//	private ProviderSignInUtils providerSignInUtils;
+
 	@Autowired
-	private ProviderSignInUtils providerSignInUtils;
+	private AppSignUpUtils appSignUpUtils;
 
 	@GetMapping("/user/me")
 	public Object userInfo() {
@@ -116,11 +119,13 @@ public class UserController {
 	@PostMapping("/user/regist")
 	public void regist(User user, HttpServletRequest request) {
 		String userId = user.getNickName();
-		providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+		//providerSignInUtils.doPostSignUp(userId, new ServletWebRequest(request));
+
+		appSignUpUtils.doPostSignUp(new ServletWebRequest(request), userId);
 	}
-	
+
 	@GetMapping("/user/test")
-	public ModelAndView test(){
+	public ModelAndView test() {
 		return new ModelAndView("forward:/users");
 	}
 

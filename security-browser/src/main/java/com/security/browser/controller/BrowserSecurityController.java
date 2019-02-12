@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import com.security.browser.support.SocialUserInfo;
 import com.security.core.properties.SecurityConstants;
 import com.security.core.properties.SecurityProperties;
 import com.security.core.support.SimpleResponse;
+import com.security.core.support.SocialUserInfo;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.social.security.SpringSocialConfigurer;
 
+import com.security.app.social.openid.OpenIdAuthenticationConfig;
 import com.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.security.core.properties.SecurityConstants;
 import com.security.core.properties.SecurityProperties;
@@ -36,6 +37,9 @@ public class AuthoritzationResourceServerConfig extends ResourceServerConfigurer
 	@Autowired
 	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 	
+	@Autowired
+	private OpenIdAuthenticationConfig openIdAuthenticationConfig;
+	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		
@@ -45,6 +49,8 @@ public class AuthoritzationResourceServerConfig extends ResourceServerConfigurer
 			.apply(smsCodeAuthenticationSecurityConfig)
 		.and()
 			.apply(springSocialConfigurer)
+		.and()
+			.apply(openIdAuthenticationConfig)
 		.and()
 			.formLogin()
 			.loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
@@ -64,7 +70,7 @@ public class AuthoritzationResourceServerConfig extends ResourceServerConfigurer
 					SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
 					SecurityConstants.DEFAULT_QQ_LOGIN_IMAGE,
 					securityProperties.getBrowser().getSingUpUrl(),
-					"/user/regist","/session/invalid"
+					"/user/regist","/session/invalid","/social/signUp"
 				).permitAll()
 			.anyRequest()
 			.authenticated()

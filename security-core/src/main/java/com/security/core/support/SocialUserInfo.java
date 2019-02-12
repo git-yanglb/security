@@ -1,4 +1,4 @@
-package com.security.browser.support;
+package com.security.core.support;
 
 import lombok.Getter;
 import lombok.Setter;

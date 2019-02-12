@@ -33,16 +33,18 @@ public class SocialConfig extends SocialConfigurerAdapter {
 	@Autowired(required = false)
 	private ConnectionSignUp connectionSignUp;
 
+	@Autowired(required = false)
+	private SocialAuthenticationFilterPostProcessor socialAuthenticationFilterPostProcessor;
+
 	@Override
 	public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-		JdbcUsersConnectionRepository connectionRepository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
+		JdbcUsersConnectionRepository connectionRepository = new JdbcUsersConnectionRepository(dataSource,
+				connectionFactoryLocator, Encryptors.noOpText());
 		/*
 		 * 设置社交登录与本系统用户关联表前缀
 		 */
-		//connectionRepository.setTablePrefix("tsm_");
-		if(connectionSignUp != null){
-			connectionRepository.setConnectionSignUp(connectionSignUp);
-		}
+		// connectionRepository.setTablePrefix("tsm_");
+		connectionRepository.setConnectionSignUp(connectionSignUp);
 		return connectionRepository;
 	}
 
@@ -64,7 +66,13 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
 	@Bean
 	public SpringSocialConfigurer springSocialConfigurer() {
-		return new SecuritySpringSocialConfigurer(securityProperties.getSocial().getFilterProcessesUrl());
+		String filterProcessesUrl = securityProperties.getSocial().getFilterProcessesUrl();
+		SecuritySpringSocialConfigurer socialConfigurer = new SecuritySpringSocialConfigurer(filterProcessesUrl);
+		socialConfigurer.signupUrl(securityProperties.getBrowser().getSingUpUrl());
+		if (socialAuthenticationFilterPostProcessor != null) {
+			socialConfigurer.setPostProcessor(socialAuthenticationFilterPostProcessor);
+		}
+		return socialConfigurer;
 	}
 
 	@Bean
