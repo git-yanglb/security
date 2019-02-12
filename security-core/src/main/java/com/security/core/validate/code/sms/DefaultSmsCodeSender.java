@@ -11,7 +11,7 @@ public class DefaultSmsCodeSender implements SmsCodeSender {
 
 	@Override
 	public void send(String mobile, String code) {
-		log.info("向手机" + mobile + "发送短信验证码" + code);
+		log.info("向手机{}发送短信验证码：{}", mobile, code);
 	}
 
 }
