@@ -49,14 +49,14 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleInfo update(RoleInfo info) {
-		Role role = roleRepository.getOne(info.getId());
+		Role role = roleRepository.findById(info.getId()).get();
 		BeanUtils.copyProperties(info, role);
 		return info;
 	}
 
 	@Override
 	public void delete(Long id) {
-		Role role = roleRepository.getOne(id);
+		Role role = roleRepository.findById(id).get();
 		if(CollectionUtils.isNotEmpty(role.getAdmins())){
 			throw new RuntimeException("不能删除有下挂用户的角色");
 		}
@@ -80,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleInfo getInfo(Long id) {
-		Role role = roleRepository.getOne(id);
+		Role role = roleRepository.findById(id).get();
 		RoleInfo info = new RoleInfo();
 		BeanUtils.copyProperties(role, info);
 		return info;
@@ -96,7 +96,7 @@ public class RoleServiceImpl implements RoleService {
 	
 	@Override
 	public String[] getRoleResources(Long id) {
-		Role role = roleRepository.getOne(id);
+		Role role = roleRepository.findById(id).get();
 		Set<String> resourceIds = new HashSet<>();
 		for (RoleResource resource : role.getResources()) {
 			resourceIds.add(resource.getResource().getId().toString());
@@ -107,13 +107,13 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	public void setRoleResources(Long roleId, String resourceIds) {
 		resourceIds = StringUtils.removeEnd(resourceIds, ",");
-		Role role = roleRepository.getOne(roleId);
+		Role role = roleRepository.findById(roleId).get();
 		roleResourceRepository.deleteAll(role.getResources());
 		String[] resourceIdArray = StringUtils.splitByWholeSeparatorPreserveAllTokens(resourceIds, ",");
 		for (String resourceId : resourceIdArray) {
 			RoleResource roleResource = new RoleResource();
 			roleResource.setRole(role);
-			roleResource.setResource(resourceRepository.getOne(new Long(resourceId)));
+			roleResource.setResource(resourceRepository.findById(new Long(resourceId)).get());
 			roleResourceRepository.save(roleResource);
 		}
 	}

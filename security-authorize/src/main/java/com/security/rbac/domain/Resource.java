@@ -84,7 +84,7 @@ public class Resource {
 	public ResourceInfo toTree(Admin admin) {
 		ResourceInfo result = new ResourceInfo();
 		try {
-			BeanUtils.copyProperties(this, result);
+			BeanUtils.copyProperties(result, this);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			e.printStackTrace();
 		}

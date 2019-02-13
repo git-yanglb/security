@@ -1,7 +1,7 @@
 package com.security.rbac.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +34,8 @@ public class ResourceController {
 	 * @return
 	 */
 	@GetMapping
-	public ResourceInfo getTree(@AuthenticationPrincipal Admin admin){
+	public ResourceInfo getTree(Authentication authentication){
+		Admin admin = (Admin) authentication.getPrincipal();
 		return resourceService.getTree(admin.getId());
 	}
 	/**

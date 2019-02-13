@@ -31,5 +31,7 @@ public class BrowserProperties {
 	 * 注册页
 	 */
 	private String singUpUrl = "/signup.html";
+	
+	private String loginSuccessUrl;
 
 }

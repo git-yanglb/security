@@ -6,8 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +38,11 @@ public class SecurityAuthenticationSucessHandler extends SavedRequestAwareAuthen
 			response.setContentType("application/json;charset=UTF-8");
 			response.getWriter().write(mapper.writeValueAsString(authentication));
 		} else {
-			super.onAuthenticationSuccess(request, response, authentication);
+			if(StringUtils.isNotBlank(securityProperties.getBrowser().getLoginSuccessUrl())){
+				new DefaultRedirectStrategy().sendRedirect(request, response, securityProperties.getBrowser().getLoginSuccessUrl());
+			}else{
+				super.onAuthenticationSuccess(request, response, authentication);
+			}
 		}
 	}
 

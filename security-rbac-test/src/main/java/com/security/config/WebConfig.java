@@ -1,10 +1,14 @@
 package com.security.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.request.async.TimeoutCallableProcessingInterceptor;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -64,6 +68,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
 		// .allowedOrigins("*")
 		// .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH")
 		// .allowCredentials(true).maxAge(3600);
+	}
+	
+	@Override
+	protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+		 // 注册Spring data jpa pageable的参数分解器
+		 argumentResolvers.add(new PageableHandlerMethodArgumentResolver());
 	}
 
 }

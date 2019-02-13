@@ -27,7 +27,7 @@ spring:
 isecurity:
   browser:
     login-type: redirect
-    sing-up-url: /manage.html  
+    login-success-url: /manage.html
   social:
     qq:
       provider-id: qq
