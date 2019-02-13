@@ -14,7 +14,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 import com.security.browser.session.ExpiredSessionStrategy;
 import com.security.core.authentication.AbstractChannelSecurityConfig;
 import com.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
-import com.security.core.properties.SecurityConstants;
+import com.security.core.authorize.SecurityAuthorizeConfigManager;
 import com.security.core.properties.SecurityProperties;
 import com.security.core.validate.code.ValidateCodeSecurityConfig;
 
@@ -38,6 +38,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 	
 	@Autowired(required = false)
 	private SpringSocialConfigurer springSocialConfigurer;
+	
+	@Autowired
+	private SecurityAuthorizeConfigManager securityAuthorizeConfigManager;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -69,18 +72,9 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 				.logoutSuccessUrl(securityProperties.getBrowser().getLoginPage())
 				//.deleteCookies("JESSIONID","SESSION")
 			.and()
-				.authorizeRequests()
-				.antMatchers(
-						securityProperties.getBrowser().getLoginPage(),
-						SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-						SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-						SecurityConstants.DEFAULT_QQ_LOGIN_IMAGE,
-						securityProperties.getBrowser().getSingUpUrl(),
-						"/user/regist","/session/invalid"
-					).permitAll()
-				.anyRequest().authenticated()
-			.and()
 				.csrf().disable();
+		
+		securityAuthorizeConfigManager.config(http.authorizeRequests());
 		
 	}
 	

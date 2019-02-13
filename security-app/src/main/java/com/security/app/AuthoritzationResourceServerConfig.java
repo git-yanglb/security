@@ -11,6 +11,7 @@ import org.springframework.social.security.SpringSocialConfigurer;
 
 import com.security.app.social.openid.OpenIdAuthenticationConfig;
 import com.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.security.core.authorize.SecurityAuthorizeConfigManager;
 import com.security.core.properties.SecurityConstants;
 import com.security.core.properties.SecurityProperties;
 import com.security.core.validate.code.ValidateCodeSecurityConfig;
@@ -40,6 +41,9 @@ public class AuthoritzationResourceServerConfig extends ResourceServerConfigurer
 	@Autowired
 	private OpenIdAuthenticationConfig openIdAuthenticationConfig;
 	
+	@Autowired
+	private SecurityAuthorizeConfigManager securityAuthorizeConfigManager;
+	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		
@@ -62,18 +66,18 @@ public class AuthoritzationResourceServerConfig extends ResourceServerConfigurer
 			.logoutUrl("/logout")
 			.logoutSuccessUrl(securityProperties.getBrowser().getLoginPage())
 			//.deleteCookies("JESSIONID","SESSION")
-		.and()
-			.authorizeRequests()
-			.antMatchers(
-					securityProperties.getBrowser().getLoginPage(),
-					SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
-					SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
-					SecurityConstants.DEFAULT_QQ_LOGIN_IMAGE,
-					securityProperties.getBrowser().getSingUpUrl(),
-					"/user/regist","/session/invalid","/social/signUp"
-				).permitAll()
-			.anyRequest()
-			.authenticated()
+//		.and()
+//			.authorizeRequests()
+//			.antMatchers(
+//					securityProperties.getBrowser().getLoginPage(),
+//					SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX + "/*",
+//					SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+//					SecurityConstants.DEFAULT_QQ_LOGIN_IMAGE,
+//					securityProperties.getBrowser().getSingUpUrl(),
+//					"/user/regist","/session/invalid","/social/signUp"
+//				).permitAll()
+//			.anyRequest()
+//			.authenticated()
 		.and()
 			.csrf()
 			.disable();
@@ -81,6 +85,8 @@ public class AuthoritzationResourceServerConfig extends ResourceServerConfigurer
 		if(springSocialConfigurer != null){
 			http.apply(springSocialConfigurer);
 		}
+		
+		securityAuthorizeConfigManager.config(http.authorizeRequests());
 		
 	}
 }

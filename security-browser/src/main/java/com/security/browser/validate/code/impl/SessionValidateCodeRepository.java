@@ -1,5 +1,6 @@
 package com.security.browser.validate.code.impl;
 
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -23,7 +24,7 @@ public class SessionValidateCodeRepository implements ValidateCodeRepository {
     /**
      * 操作session的工具类
      */
-    private SessionStrategy sessionStrategy;
+    private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
     @Override
     public void save(ServletWebRequest request, ValidateCode code, ValidateCodeType validateCodeType) {
